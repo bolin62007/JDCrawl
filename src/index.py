@@ -11,8 +11,8 @@ import requests
 def main():
     comment_crawl = CommentCrawl()
 #     comment_crawl.crawl_comment(11242112, 1)
-#     r = comment_crawl.crawl_comment(27555188739,page = 1)
-    r = comment_crawl.crawl_from_itemlist(max_page = 2)
+    r = comment_crawl.crawl_comment(27555188739,page = 1)
+#     r = comment_crawl.crawl_from_itemlist(max_page = 2)
 #     
     for i in r:
         print(i)
