@@ -1,4 +1,4 @@
-#!usr/bin/python3
+#!/usr/bin/python3
 #coding=utf-8
 '''
 Created on 2018年5月17日
@@ -9,6 +9,7 @@ import conf
 import re
 import json
 from utility.threadpool import ThreadPool
+from module import json_saver
 import math
 import requests
 
@@ -111,7 +112,9 @@ if __name__ == "__main__":
 #     r = crawl_comment.crawl_comment(27555188739,1,None)
 #     for i in r:
 #         print(i)
-    crawl_comment.crawl_from_itemlist(max_page = 2)
+#     crawl_comment.crawl_from_itemlist(max_page = 2)
+    r = crawl_comment.crawl_comment(27555188739,0, 2)
+    json_saver.save_json("a.json", r)
 
         
         
