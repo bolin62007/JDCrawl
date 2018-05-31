@@ -2,12 +2,12 @@
 # coding=utf-8
 
 import queue
-# from module.comment_crawl import CommentCrawl
 from utility.subthread import SubThread
+import conf
 
 class ThreadPool(object):
     """线程池"""
-    def __init__(self,func,workers,max_page = 2,max_thread = 10):
+    def __init__(self,func,workers,max_page = conf.max_page,max_thread = conf.max_page):
         """
             @param func: 要处理worker的函数
             @param workers :  任务

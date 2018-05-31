@@ -7,9 +7,11 @@ Created on 2018年5月17日
 '''
 import conf
 import re
+import os
 import json
 from utility.threadpool import ThreadPool
-from module import json_saver
+from module.csv_saver import CSVSaver
+from module import csv_saver
 import math
 import requests
 
@@ -90,10 +92,11 @@ class CommentCrawl(object):
             
         return  products
     
-    def crawl_from_itemlist(self,items_url = conf.items_url,max_page = None):
+    def crawl_from_itemlist(self,items_url = conf.items_url,max_page = conf.max_page):
         """从商品列表爬去评论
             @param items_url:  商品列表url
             @param max_page:  爬取评论的最大页数，None表示爬取商品的所有页数  
+            @return: 结果的queue
         """
         product_Ids = self.get_productId(items_url);
         
@@ -106,6 +109,18 @@ class CommentCrawl(object):
         
         return thread_pool.result_queue
         
+    def crawl_save(self,items_url = conf.items_url,max_page = conf.max_page,save_way = "csv"):
+        """爬取商品列表中的评论并且保存
+            保存的路径会在工程下新建一个comments文件夹，保存文件
+            @param items_url:  商品列表url
+            @param max_page:  爬取评论的最大页数，None表示爬取商品的所有页数  
+            @param save_way:  保存方式，一共有三种方式（mongodb，csv，txt），默认为csv方式 
+        """
+        result_queue = self.crawl_from_itemlist(items_url, max_page)
+        if not os.path.exists(conf.save_folder):
+            os.mkdir(conf.save_folder)
+        CSVSaver.save_queue(conf.save_folder + "a.csv", result_queue)
+        
         
 if __name__ == "__main__":
     crawl_comment = CommentCrawl()
@@ -113,8 +128,12 @@ if __name__ == "__main__":
 #     for i in r:
 #         print(i)
 #     crawl_comment.crawl_from_itemlist(max_page = 2)
-    r = crawl_comment.crawl_comment(27555188739,0, 2)
-    json_saver.save_json("a.json", r)
+#     r = crawl_comment.crawl_comment(27555188739,0, 2)
+    crawl_comment.crawl_save(max_page=2)
+#     csv_saver.CSVSaver.save_data(filename, data)
+#     for i in r:
+#         print(i)
+#     json_saver.save_json("a.json", r)
 
         
         
