@@ -8,15 +8,22 @@ Created on 2018年5月23日
 '''
 
 import pymongo
-import conf
+import  conf
 
 class MongoDBHelper(object):
     def __init__(self):
         #获取连接参数以及数据库参数
+        self.__conn_dict = None
+        self.__db_name = None
+        
+        self.__conn = None
+        
+    def __init__conn(self):
+        """初始化连接"""
         self.__conn_dict = conf.mongo_conn_dict
         self.__db_name = conf.mongo_db_name
         
-        self.__conn = MongoDBHelper.get_conn(self.__conn_dict);
+        self.__conn = MongoDBHelper.get_conn(self.__conn_dict)
         
     @staticmethod
     def get_conn(conn_dict):
@@ -28,6 +35,8 @@ class MongoDBHelper(object):
         
         
     def insert(self,collection_name,data):
+        if not self.__conn:
+            self.__init__conn()
         conn = self.__conn
         db = conn[self.__db_name]
         collection = db[collection_name]

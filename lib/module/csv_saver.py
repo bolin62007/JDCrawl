@@ -16,11 +16,29 @@ class CSVSaver(object):
     
     @staticmethod
     def save_data(filename,data):
-        with open(filename,"w") as f:
-            if isinstance(data, queue.Queue):
-                while not data.isEmpty():
-                    data.get()
+        if isinstance(data, queue.Queue):
+            CSVSaver.save_queue(filename, data)
+        elif isinstance(data, list):
+            CSVSaver.save_list(filename, data)
 
+
+    @staticmethod
+    def save_list(filename,data):
+        """list类型保存"""
+        with open(filename,"w") as f:
+            fieldnames = None;
+            for sub_data in data:
+                if not fieldnames:
+                    fieldnames = sub_data.keys()
+                    writer = csv.DictWriter(f,fieldnames = fieldnames)
+                    writer.writeheader()
+                try:
+                    writer.writerow(sub_data)
+                except ValueError:
+                    continue;
+                 
+        
+        
     @staticmethod                    
     def save_queue(filename,data):
         """队列数据存储"""
@@ -31,7 +49,7 @@ class CSVSaver(object):
                 if not fieldnames:
                     fieldnames = sub_data.keys()
                     writer = csv.DictWriter(f,fieldnames = fieldnames)
-                writer.writeheader()
+                    writer.writeheader()
                 writer.writerow(sub_data)
                 
                     

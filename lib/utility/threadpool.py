@@ -2,18 +2,20 @@
 # coding=utf-8
 
 import queue
-from utility.subthread import SubThread
+from lib.utility.subthread import SubThread
 import conf
 
 class ThreadPool(object):
     """线程池"""
-    def __init__(self,func,workers,max_page = conf.max_page,max_thread = conf.max_page):
+    def __init__(self,crawl_func,save_func,workers,max_page = conf.max_page,max_thread = conf.max_threads):
         """
-            @param func: 要处理worker的函数
+            @param crawl_func: 爬取函数
+            @param save_func:  保存函数
             @param workers :  任务
             @param max_thread  :  最大线程数   
         """
-        self.func = func
+        self.crawl_func = crawl_func
+        self.save_func = save_func
         self.max_page = max_page
         
         self.result_queue = queue.Queue()
@@ -35,7 +37,8 @@ class ThreadPool(object):
         self.threads = []
         for i in range(max_thread):
             sub_thread = SubThread(
-                            func = self.func,
+                            crawl_func = self.crawl_func,
+                            save_func = self.save_func,
                             productIds_queue = self.worker_queue,
                             result_queue = self.result_queue,
                             max_page = self.max_page)

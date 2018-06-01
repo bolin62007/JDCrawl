@@ -5,24 +5,39 @@ Created on 2018年5月17日
 
 @author: leonlee
 '''
-from module.comment_crawl import CommentCrawl
-import requests
+from lib.module.comment_crawl import CommentCrawl
+import sys
+import argparse
+import conf
+
+    
+def init_parse():
+    """初始化命令行"""
+    parser = argparse.ArgumentParser()
+    
+    subparsers = parser.add_subparsers(help='commands')
+    
+    
+    crawl_single_parser = subparsers.add_parser('crawl-single', help = '爬取单个商品评论')
+    crawl_single_parser.add_argument('productID',help='爬取的商品ID',type = int)
+    crawl_single_parser.add_argument('--pages',help = "爬取的评论页数",default = conf.max_page)
+    crawl_single_parser.add_argument("-s","--save-way",help = "保存方式,默认为保存为csv格式",default = "csv")
+    
+    crawl_list_parser = subparsers.add_parser("crawl-list",help = "爬取多个评论")
+    crawl_list_parser.add_argument("url",help = "url地址")
+    crawl_list_parser.add_argument("-t","--threads",help = "线程池中的线程数",default = conf.max_threads)
+    crawl_list_parser.add_argument("-s","--save-way",help = "保存方式",default = "csv")
+    
+
+    return parser.parse_args()
 
 def main():
+    args = init_parse()
+    
+    
     comment_crawl = CommentCrawl()
-#     comment_crawl.crawl_comment(11242112, 1)
-    r = comment_crawl.crawl_comment(27555188739,page = 1)
-#     r = comment_crawl.crawl_from_itemlist(max_page = 2)
-#     
-    for i in r:
-        print(i)
-#     r = comment_crawl.get_productId()
-#     print(len(r))
-#     for i,j in r.items():
-#         print(i,j)
-#     r = requests.get("https://list.jd.com/list.html?cat=1713,3287,3804&go=0")
-#     print(r.text)
     
 
 if __name__ == "__main__":
-    main()
+    init_parse()
+#     main()

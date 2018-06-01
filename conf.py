@@ -5,6 +5,10 @@ Created on 2018年5月17日
 
 @author: leonlee
 '''
+from lib.module import json_saver
+from lib.module import csv_saver
+from lib.module.mongo_saver import MongoSaver
+
 ###############################################################
 #    爬虫配置
 ##############################################################
@@ -37,14 +41,20 @@ mongo_db_name = "JDCrawl"
 #######################################################################
 #    线程池配置
 #######################################################################
+#最大线程数
 max_threads = 10
+#爬取评论的页数
 max_page = 2
 
 ########################################################################
 #    其他
 ########################################################################
 #保存方式
-save_wags = ["csv","mongodb","txt"]
+save_ways = {
+            "csv" : csv_saver.CSVSaver.save_data,
+            "mongodb": MongoSaver.save_data,
+            "txt" : json_saver.TxtSaver.save_data
+            }
 #默认保存评论的文件夹
 save_folder = "comments/"
 
