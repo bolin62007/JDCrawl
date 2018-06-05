@@ -7,12 +7,16 @@ Created on 2018年5月23日
 '''
 
 import queue
+import os
+import conf
 
 class TxtSaver(object):
 
 
     @staticmethod
     def save_data(filename,data):
+        if not os.path.exists(conf.save_folder):
+            os.mkdir(conf.save_folder)
         if isinstance(data, queue.Queue):
             TxtSaver.save_queue(filename, data)
         elif isinstance(data, list):

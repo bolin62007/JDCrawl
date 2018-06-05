@@ -8,6 +8,8 @@ Created on 2018年5月24日
 
 import csv
 import queue
+import conf
+import os
 
 class CSVSaver(object):
     """CSV存储器"""
@@ -16,6 +18,10 @@ class CSVSaver(object):
     
     @staticmethod
     def save_data(filename,data):
+                #创建保存文件夹
+        if not os.path.exists(conf.save_folder):
+            os.mkdir(conf.save_folder)
+        
         if isinstance(data, queue.Queue):
             CSVSaver.save_queue(filename, data)
         elif isinstance(data, list):

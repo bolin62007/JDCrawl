@@ -30,11 +30,12 @@ class CommentCrawl(object):
         return response.text
     
     
-    def crawl_comment(self,productId,start_page = 0,page_length = None):
+    def crawl_comment(self,productId,start_page = 0,page_length = None,save_way = None):
         """爬取评论
             @param productId: 商品ID
             @param start_page: 爬取评论开始页  
             @param page_length:  爬取评论页数长度，默认为None表示从开始页到最后一页
+            @param save_way: 保存方式，分别为txt，mongodb，csv，None，默认为None表示不保存 
             @return: 评论的dict形式
         """
         #长度判定
@@ -66,7 +67,12 @@ class CommentCrawl(object):
             comments.extend(match_result)
             
             current_page_length += 1
-        
+            
+        #保存
+        if save_way: 
+            save_func = conf.save_ways[save_way];
+            save_func(filename = "{0}{1}.{2}".format(conf.save_folder,productId,save_way),data = comments)
+            
         return comments
         
         
@@ -91,18 +97,13 @@ class CommentCrawl(object):
             
         return  products
     
-    def crawl_from_itemlist(self,items_url = conf.items_url,max_page = conf.max_page,save_way = "csv"):
+    def crawl_from_itemlist(self,items_url = conf.items_url,max_page = conf.max_page,save_way = "csv",max_thread = conf.max_threads):
         """从商品列表爬去评论并保存
             @param items_url:  商品列表url
             @param max_page:  爬取评论的最大页数，None表示爬取商品的所有页数  
             @return: 结果的queue
         """
-        #创建保存文件夹
-        if not os.path.exists(conf.save_folder):
-            os.mkdir(conf.save_folder)
-            
         assert save_way in conf.save_ways.keys(),"保存方式错误"
-        
         save_func = conf.save_ways[save_way]
             
         product_Ids = self.get_productId(items_url);
@@ -111,7 +112,8 @@ class CommentCrawl(object):
                             save_func = save_func,
                             crawl_func = self.crawl_comment,
                             workers = product_Ids,
-                            max_page = max_page
+                            max_page = max_page,
+                            max_thread = max_thread
                             )
         thread_pool.start_all_threads()
         
@@ -124,8 +126,8 @@ if __name__ == "__main__":
 #     r = crawl_comment.crawl_comment(27555188739,1,None)
 #     for i in r:
 #         print(i)
-    crawl_comment.crawl_from_itemlist(max_page = None,save_way = "mongodb")
-#     r = crawl_comment.crawl_comment(27555188739,0, 2)
+#     crawl_comment.crawl_from_itemlist(max_page = None,save_way = "mongodb")
+    r = crawl_comment.crawl_comment(27555188739,0, 2,save_way = "csv")
 #     csv_saver.CSVSaver.save_list(conf.save_folder + "a.csv", r)
 #     crawl_comment.crawl_save(max_page=2)
 #     csv_saver.CSVSaver.save_data(filename, data)
