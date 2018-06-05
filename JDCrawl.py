@@ -30,7 +30,7 @@ def init_parse():
     
     crawl_single_parser = subparsers.add_parser('crawl-single', help = '爬取单个商品评论')
     crawl_single_parser.add_argument('productID',help='爬取的商品ID',type = int)
-    crawl_single_parser.add_argument('--pages',help = "爬取的评论页数",default = conf.max_page)
+    crawl_single_parser.add_argument('--pages',help = "爬取的评论页数,默认爬取所有页数",default = conf.max_page)
     crawl_single_parser.add_argument("-s","--save-way",
                                      help = "保存方式,共有三种方式，分别为mongodb，txt，csv，默认为保存为csv格式",
                                      default = "csv",
@@ -51,7 +51,7 @@ def init_parse():
         
     crawl_list_parser = subparsers.add_parser("crawl-list",help = "爬取多个评论")
     crawl_list_parser.add_argument("url",help = "url")
-    crawl_list_parser.add_argument('--pages',help = "爬取的评论页数",default = conf.max_page)
+    crawl_list_parser.add_argument('--pages',help = "爬取的评论页数，默认爬取所有页数",default = conf.max_page)
     crawl_list_parser.add_argument("-s","--save-way",
                                      help = "保存方式,共有三种方式，分别为mongodb，txt，csv，默认为保存为csv格式",
                                      default = "csv",
