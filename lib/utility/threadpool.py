@@ -1,6 +1,7 @@
 # !/usr/bin/python3
 # coding=utf-8
 
+import threading
 import queue
 from lib.utility.subthread import SubThread
 import conf
@@ -20,11 +21,16 @@ class ThreadPool(object):
         
         self.result_queue = queue.Queue()
         
+        current_thread = threading.currentThread()
+        current_thread.setName("ThreadPool")
+#         current_thread.setDaemon(True)
+        
         #初始化任务以及子线程
         self.__init__workers(workers)
         self.__init__threads(max_thread)
         
-        
+
+#         current_thread.join(self.threads[-1])
             
     def __init__workers(self,workers):
         """创建人物队列"""
@@ -50,12 +56,8 @@ class ThreadPool(object):
         for thread in self.threads:
             thread.start()
             
+        for thread in self.threads:
+            thread.join()
+            
     
             
-        
-if __name__ == "__main__":
-#     CommentCrawl = CommentCrawl()
-#     threadp = ThreadPool(func = CommentCrawl.crawl_comment,workers = [0])
-    pass
-        
-    

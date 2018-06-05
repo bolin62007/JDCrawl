@@ -71,7 +71,7 @@ class CommentCrawl(object):
         #保存
         if save_way: 
             save_func = conf.save_ways[save_way];
-            save_func(filename = "{0}{1}.{2}".format(conf.save_folder,productId,save_way),data = comments)
+            save_func("{0}{1}.{2}".format(conf.save_folder,productId,save_way),data = comments)
             
         return comments
         
@@ -117,27 +117,10 @@ class CommentCrawl(object):
                             )
         thread_pool.start_all_threads()
         
+        
         return thread_pool.result_queue
         
         
-        
-if __name__ == "__main__":
-    crawl_comment = CommentCrawl()
-#     r = crawl_comment.crawl_comment(27555188739,1,None)
-#     for i in r:
-#         print(i)
-#     crawl_comment.crawl_from_itemlist(max_page = None,save_way = "mongodb")
-    r = crawl_comment.crawl_comment(27555188739,0, 2,save_way = "csv")
-#     csv_saver.CSVSaver.save_list(conf.save_folder + "a.csv", r)
-#     crawl_comment.crawl_save(max_page=2)
-#     csv_saver.CSVSaver.save_data(filename, data)
-#     for i in r:
-
-#         print(i)
-#     json_saver.save_json("a.json", r)
-    
-#     a = [save_way_name for save_way_name,save_way in conf.save_ways.items() if save_way == conf.save_ways["txt"]]
-#     print(a)
         
         
 
