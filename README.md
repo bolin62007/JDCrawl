@@ -1,32 +1,31 @@
-# JDCrawl
-京东评论爬取的小工具,你可以用来作推荐系统和情感分析的练习数据
-该工具一共有两个小功能：
+﻿# JDCrawl
+用线程池实现的京东商品评论爬取小工具,你可以用来作推荐系统和情感分析的练习数据集
+## 基本用法
+    
+* **爬取单个商品**：
 
 ```
-
-	usage: JDCrawl.py [-h] {crawl-single,crawl-list} ...
-	
-	positional arguments:
-	  {crawl-single,crawl-list}
-	                        京东评论爬虫小工具
-	    crawl-single        爬取单个商品评论
-	    crawl-list          爬取多个评论
-	
-	optional arguments:
-	  -h, --help            show this help message and exit
-	
+	./JDCrawl.py crawl-single 商品ID
 ```
-	
-	* 爬取单个商品
-		你可以通过执行：
-		```
-			./JDCrawl.py crawl-single 商品ID
-		```
-		或
-		``` 
-			python3 ./JDCrawl.py crawl-single 商品ID
-		```
-		爬取商品，执行后会程序会在该目录下新建一个comment文件夹，存储爬取数据，文件名为商品ID
-		
-	* 爬取一个页面上的商品列表
-	
+    脚本会将爬取的商品评论储存在comments文件夹下
+        
+* **爬取一个页面上所有商品评论**：
+```
+    ./JDCrawl.py crawl-list 页面url
+```
+    程序会检测该url下所有的商品ID，默认用10个子线程爬取，并将爬取的所有商品评论存储在comments文件夹下
+## 更多
+	1. 指定爬取页数
+```
+    ./JDCrawl crawl-single --pages 页数
+```
+	2. 指定存储方式
+```
+    ./JDCrawl crawl-list -s 存储方式
+```
+    存储方式一共有3中，分别为txt，mongodb，csv，默认为csv
+    3. 指定线程数
+```
+    ./JDCrawl crawl-list -t 线程数
+```
+    线程默认为10个线程，可以根据需要更改
